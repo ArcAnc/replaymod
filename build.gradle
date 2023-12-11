@@ -186,7 +186,9 @@ jar {
                 //"Implementation-Vendor": "replaymod authors",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'MixinConfigs':"mixins.replaymod.json",
                 'FMLCorePluginContainsFMLMod': 'true',
+                'ForceLoadAsMod':"true",
                 'FMLAT': 'replaymod_at.cfg'
         ])
     }

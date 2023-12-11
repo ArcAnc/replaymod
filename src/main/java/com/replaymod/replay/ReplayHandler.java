@@ -4,8 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.replaymod.core.ReplayMod;
 import com.replaymod.core.utils.Restrictions;
 import com.replaymod.core.utils.Utils;
@@ -33,16 +34,15 @@ import com.replaymod.replaystudio.replay.ReplayFile;
 import com.replaymod.replaystudio.util.Location;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.embedded.EmbeddedChannel;
-import com.mojang.blaze3d.platform.Window;
+import net.minecraft.CrashReport;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
-import net.minecraft.CrashReport;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.PacketFlow;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
@@ -55,7 +55,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
-import static com.mojang.blaze3d.platform.GlStateManager.*;
 import static com.replaymod.core.versions.MCVer.getMinecraft;
 import static com.replaymod.replay.ReplayModReplay.LOGGER;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -154,7 +153,7 @@ public class ReplayHandler {
         channel.close().awaitUninterruptibly();
 
         if (mc.player instanceof CameraEntity) {
-            mc.player.remove(Entity.RemovalReason.valueOf(""));
+            mc.player.remove(Entity.RemovalReason.DISCARDED);
         }
 
         if (mc.level != null) {
